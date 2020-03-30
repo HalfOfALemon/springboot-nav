@@ -20,44 +20,28 @@ import java.util.Date;
 @Data
 @DynamicUpdate
 public class WebsiteUser{
-    /**
-     * 用户ID
-     */
+    /**用户ID*/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    /**
-     * 用户名称
-     */
+    /**用户名称*/
     private String username;
-    /**
-     * 用户密码
-     */
+    /**用户密码*/
     private String password;
-    /**
-     * 邮箱
-     */
+    /**邮箱*/
     private String email;
-    /**
-     * 手机
-     */
+    /**手机*/
     private String phone;
-    /**
-     * 问题
-     */
+    /**问题*/
     private String question;
-    /**
-     * 答案
-     */
+    /**答案*/
     private String answer;
-    /**
-     * 用户权限
-     */
+    /**用户权限*/
     private Integer role;
-    /**
-     * token
-     */
+    /**token*/
     private String token;
+    /**用户状态，1正常，0禁用*/
+    private Boolean state;
     private Date updateTime;
     private Date createTime;
 

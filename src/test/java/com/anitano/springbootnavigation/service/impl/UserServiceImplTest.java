@@ -18,7 +18,7 @@ class UserServiceImplTest {
     UserService userService;
     @Test
     void checkToken() {
-        String yang = userService.checkToken("yang2");
+        String yang = userService.checkToken("yang2","123");
         System.out.println(yang);
     }
 }

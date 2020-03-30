@@ -9,8 +9,8 @@ spring:
     #指定数据源
     type: com.alibaba.druid.pool.DruidDataSource
     username: sell
-    password: 密码
-    url: jdbc:mysql://106.54.xxx.xx:3306/navigation?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    password: Yang134679..
+    url: jdbc:mysql://106.54.200.93:3306/navigation?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     druid:
       #2.连接池配置
       #初始化连接池的连接数量 大小，最小，最大
@@ -55,9 +55,9 @@ spring:
   #Redis配置
   redis:
     port: 6379
-    host: 106.54.xxx.xx
+    host: 106.54.200.93
     database: 0
-    password: xxxxx
+    password: Yang134679258..
     lettuce:
       pool:
         max-active: 8
@@ -91,3 +91,5 @@ server:
   servlet:
     context-path: /nav
   port: 8001
+md5:
+  propertiesKey: YaNg1478963.0
