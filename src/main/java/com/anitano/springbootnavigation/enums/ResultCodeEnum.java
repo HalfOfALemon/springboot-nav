@@ -34,6 +34,7 @@ public enum ResultCodeEnum {
 
     /* 业务错误：30001-39999 */
     CREATE_FAIL(30001, "创建失败"),
+    UPDATE_FAIL(30001, "创建失败"),
 
     /* 系统错误：40001-49999 */
     SYSTEM_INNER_ERROR(40001, "系统繁忙，请稍后重试"),

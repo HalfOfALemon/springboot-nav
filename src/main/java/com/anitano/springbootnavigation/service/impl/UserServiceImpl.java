@@ -69,16 +69,14 @@ public class UserServiceImpl implements UserService {
         if(StringUtils.isEmpty(query)){
             //1、查询条件为空，查询所有
             websiteUserPage = userRepository.findAll(pageable);
-            //2、本来获得到Page就可以返回出去，但是还要将数据装换成DTO，所以重新组装成PageImpl，Page一个实现类
-            List<UserDTO> userDTOList = WebsiteUserToUserDTOconverter.convert(websiteUserPage.getContent());
-            //3、所有page的子类PageImpl,构造一个page
-            userDTOPage = new PageImpl<>(userDTOList,pageable,websiteUserPage.getTotalElements());
         }else {
             //查询到的用户数据List 直接组装成Page
-            List<WebsiteUser> websiteUserList = userRepository.findByUsernameLike("%"+query+"%");
-            List<UserDTO> userDTOList = WebsiteUserToUserDTOconverter.convert(websiteUserList);
-            userDTOPage = new PageImpl<>(userDTOList,pageable,websiteUserList.size());
+            websiteUserPage= userRepository.findByUsernameLike(pageable,"%"+query+"%");
         }
+        //2、本来获 得到Page就可以返回出去，但是还要将数据装换成DTO，所以重新组装成PageImpl，Page一个实现类
+        List<UserDTO> userDTOList = WebsiteUserToUserDTOconverter.convert(websiteUserPage.getContent());
+        //3、所有page的子类PageImpl,构造一个page
+        userDTOPage = new PageImpl<>(userDTOList,pageable,websiteUserPage.getTotalElements());
         return userDTOPage;
     }
 
