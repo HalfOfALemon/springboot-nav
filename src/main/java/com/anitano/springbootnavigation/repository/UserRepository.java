@@ -15,6 +15,7 @@ import java.util.List;
  */
 public interface UserRepository extends JpaRepository<WebsiteUser,Integer> {
     WebsiteUser findByUsername(String username);
+    WebsiteUser findByEmail(String email);
     /**用户名模糊查询*/
     Page<WebsiteUser> findByUsernameLike(Pageable pageable,String query);
 }

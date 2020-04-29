@@ -16,7 +16,7 @@ public interface WebsiteInfoRepository extends JpaRepository<WebsiteInfo,String>
     /**根据id查询*/
     WebsiteInfo findByWebsiteId(String id);
     /**查询这个分类下的内容*/
-    List<WebsiteInfo> findByCategoryTypeOrderByWebsiteSortAsc(Integer categoryId);
+    List<WebsiteInfo> findByCategoryType(Integer categoryId);
     /**模糊查询*/
     Page<WebsiteInfo> findByWebsiteNameLike(Pageable pageable,String query);
     /**获取某个分类下排序的最后一个*/

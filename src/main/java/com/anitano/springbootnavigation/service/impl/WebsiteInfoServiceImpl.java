@@ -1,13 +1,18 @@
 package com.anitano.springbootnavigation.service.impl;
 
 import com.anitano.springbootnavigation.converter.WebsiteInfoToWebsiteInfoDTOconverter;
+import com.anitano.springbootnavigation.dataobject.WebsiteCategory;
 import com.anitano.springbootnavigation.dataobject.WebsiteInfo;
+import com.anitano.springbootnavigation.dto.ThemeDTO;
 import com.anitano.springbootnavigation.dto.WebsiteInfoDTO;
 import com.anitano.springbootnavigation.enums.ResultCodeEnum;
 import com.anitano.springbootnavigation.exception.NavException;
 import com.anitano.springbootnavigation.repository.WebsiteInfoRepository;
+import com.anitano.springbootnavigation.service.CategoryService;
 import com.anitano.springbootnavigation.service.WebsiteInfoService;
 import com.anitano.springbootnavigation.utils.KeyUtil;
+import com.anitano.springbootnavigation.utils.ResultVOUtil;
+import com.anitano.springbootnavigation.vo.ResultVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -15,12 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @ClassName: WebsiteInfoServiceImpl
@@ -29,10 +34,14 @@ import java.util.UUID;
  */
 @Service
 public class WebsiteInfoServiceImpl implements WebsiteInfoService {
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    WebsiteInfoRepository websiteInfoRepository;
+    private WebsiteInfoRepository websiteInfoRepository;
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private CategoryService categoryService;
 
     @Override
     public Page<WebsiteInfoDTO> getList(Pageable pageable, String query) {
@@ -51,7 +60,7 @@ public class WebsiteInfoServiceImpl implements WebsiteInfoService {
 
     @Override
     public List<WebsiteInfoDTO> getList(Integer categoryType) {
-        List<WebsiteInfo> websiteInfoList = websiteInfoRepository.findByCategoryTypeOrderByWebsiteSortAsc(categoryType);
+        List<WebsiteInfo> websiteInfoList = websiteInfoRepository.findByCategoryType(categoryType);
         List<WebsiteInfoDTO> websiteInfoDTOList = WebsiteInfoToWebsiteInfoDTOconverter.convert(websiteInfoList);
         return websiteInfoDTOList;
     }
@@ -109,5 +118,33 @@ public class WebsiteInfoServiceImpl implements WebsiteInfoService {
             return websiteInfoRepository.save(websiteInfo);
         }
         return null;
+    }
+
+    @Override
+    public ResultVO addRedisInfo(Integer userId) {
+        //1、保存分类信息，使用list结构，key为 category：userid / value为 分类对象list
+        List<WebsiteCategory> websiteCategoryList = categoryService.getList();
+        try {
+            redisTemplate.opsForList().rightPushAll("category:" + userId, websiteCategoryList);
+        } catch (Exception e) {
+            logger.info("[添加用户]获取分类保存redis失败");
+            return ResultVOUtil.error(ResultCodeEnum.CREATE_FAIL);
+        }
+        //2、保存网站信息
+        try {
+            for(WebsiteCategory category :websiteCategoryList){
+                /*获取网站信息*/
+                List<WebsiteInfoDTO> websiteInfoDTOList = getList(category.getCategoryType());
+                redisTemplate.opsForList().rightPushAll("webinfo:"+userId+":"+category.getCategoryType(), websiteInfoDTOList);
+            }
+        } catch (Exception e) {
+            logger.info("[添加用户]获取信息保存redis失败");
+            redisTemplate.delete("category:" + userId);
+            return ResultVOUtil.error(ResultCodeEnum.CREATE_FAIL);
+        }
+        //3、创建基本主题
+        ThemeDTO themeDTO = new ThemeDTO("SearchInput02","Category02","Webinfo01","background-image: linear-gradient(to top, rgb(223, 233, 243) 0%, white 100%);");
+        redisTemplate.opsForValue().set("theme:"+userId,themeDTO);
+        return ResultVOUtil.success();
     }
 }

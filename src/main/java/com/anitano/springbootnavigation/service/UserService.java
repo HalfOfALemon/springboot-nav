@@ -2,6 +2,7 @@ package com.anitano.springbootnavigation.service;
 
 import com.anitano.springbootnavigation.dataobject.WebsiteUser;
 import com.anitano.springbootnavigation.dto.UserDTO;
+import com.anitano.springbootnavigation.vo.ResultVO;
 import org.apache.catalina.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +19,13 @@ public interface UserService {
     /**根据用户名获取某个用户*/
     WebsiteUser getUser(String username);
     /**用户登录*/
-    WebsiteUser login(String username,String password);
+    ResultVO login(WebsiteUser user);
     /**检查token是否存在*/
     String checkToken(String username,String token);
     /**获取用户列表*/
     Page<UserDTO> getUsers(Pageable pageable,String query);
     /**修改用户*/
     WebsiteUser userSave(WebsiteUser websiteUser);
+    /**注册用户*/
+    ResultVO registerUser(WebsiteUser websiteUser);
 }

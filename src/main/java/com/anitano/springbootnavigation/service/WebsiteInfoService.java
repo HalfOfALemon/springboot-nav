@@ -2,6 +2,7 @@ package com.anitano.springbootnavigation.service;
 
 import com.anitano.springbootnavigation.dataobject.WebsiteInfo;
 import com.anitano.springbootnavigation.dto.WebsiteInfoDTO;
+import com.anitano.springbootnavigation.vo.ResultVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -23,5 +24,8 @@ public interface WebsiteInfoService {
     WebsiteInfo add(WebsiteInfo websiteInfo);
     /**根据id删除网站信息*/
     WebsiteInfo delete(String id);
+    /**更新网站信息*/
     WebsiteInfo update(WebsiteInfoDTO websiteInfoDTO);
+    /**将网站信息保存到redis*/
+    ResultVO addRedisInfo(Integer userId);
 }

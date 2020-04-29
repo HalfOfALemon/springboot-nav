@@ -29,8 +29,11 @@ public enum ResultCodeEnum {
     USER_ACCOUNT_FORBIDDEN(20003, "账号已被禁用"),
     USER_NOT_EXIST(20004, "用户不存在"),
     USER_HAS_EXISTED(20005, "用户已存在"),
+    USER_EMAIL_HAS_EXISTED(20005, "邮箱已存在"),
     Cert_HAS_EXISTED(20006, "认证已存在"),
-
+    USER_RIGHTS_ERROR(20007, "用户权限错误"),
+    /*管理员*/
+    ADMIN_NOT_LOGGED_IN(21001, "管理员未登录"),
 
     /* 业务错误：30001-39999 */
     CREATE_FAIL(30001, "创建失败"),
@@ -43,6 +46,11 @@ public enum ResultCodeEnum {
     RESULE_DATA_NONE(50001, "数据未找到"),
     DATA_IS_WRONG(50002, "数据有误"),
     DATA_ALREADY_EXISTED(50003, "数据已存在"),
+    INVALID_FILE_TYPE(50004,"数据类型错误"),
+    DELETE_OLD_DATA_FAILED(50005,"删除旧数据失败"),
+    UPDATE_DATA_FAILED(50006,"更新数据失败"),
+    DELETE_DATA_FAILED(50007,"不允许删除该数据"),
+
 
     /* 接口错误：60001-69999 */
     INTERFACE_INNER_INVOKE_ERROR(60001, "内部系统接口调用异常"),
@@ -54,7 +62,7 @@ public enum ResultCodeEnum {
 
     /* 权限错误：70001-79999 */
     PERMISSION_NO_ACCESS(70001, "只有标签 Owner ,才具备删除权限"),
-    PERMISSION_NO_PHONE_ACCESS(70002,"此认证标签已有员工认证，不可以进行删除");
+    PERMISSION_NO_PHONE_ACCESS(70002,"此认证标签已有认证，不可以进行操作");
 
     private Integer code;
     private String message;
